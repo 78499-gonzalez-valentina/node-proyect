@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const TareaRouter = (0, express_1.Router)();
+TareaRouter.get('', () => { });
+TareaRouter.get('/:id', () => { });
+TareaRouter.post('', () => { });
+TareaRouter.put('/:id', () => { });
+TareaRouter.delete('/:id', () => { });
+exports.default = TareaRouter;

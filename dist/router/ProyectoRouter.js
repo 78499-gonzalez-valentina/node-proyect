@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const ProyectoRouter = (0, express_1.Router)();
+ProyectoRouter.get('', () => { });
+ProyectoRouter.get('/:id', () => { });
+ProyectoRouter.post('', () => { });
+ProyectoRouter.put('/:id', () => { });
+ProyectoRouter.delete('/:id', () => { });
+exports.default = ProyectoRouter;
