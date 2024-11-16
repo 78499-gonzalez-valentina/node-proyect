@@ -19,7 +19,8 @@ const obtenerRolPorId = async (request: Request, response: Response) => {
 
 const insertarNuevoRol = async (req: Request, res: Response) => {
     try {
-        const { nombre } = req.body; // Obtener el nombre desde el cuerpo de la solicitud
+        const { nombre } = req.body;
+
         if (!nombre) {
             return res.status(400).json({ message: "El nombre del rol es obligatorio" });
         }
@@ -34,7 +35,6 @@ const insertarNuevoRol = async (req: Request, res: Response) => {
         }
     }
 };
-
 // Modificar un rol
 const modificarRol = async (req: Request, res: Response) => {
     try {

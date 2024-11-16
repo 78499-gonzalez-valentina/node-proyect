@@ -10,7 +10,7 @@ require('dotenv').config({ path: './.env' });
 
 export const dataSource = new DataSource({
   type:'postgres',
-  host: 'strikingly-cool-mullet.data-1.use1.tembo.io',
+  host: process.env.DB_HOST,
   port:5432,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
@@ -23,6 +23,3 @@ export const dataSource = new DataSource({
 
   
 })
-
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
-console.log('DB_username:', process.env.DB_USERNAME);

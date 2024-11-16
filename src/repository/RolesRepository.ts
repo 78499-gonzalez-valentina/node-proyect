@@ -13,10 +13,8 @@ const obtenerRolPorId = async (rolId: number): Promise<RolEntity | null> => {
 };
 
 const insertarNuevoRol = async (nombre: string): Promise<RolEntity> => {
-  const nuevoRol = new RolEntity();
-  nuevoRol.nombre = nombre;
-
-  return await _rolesRepository.save(nuevoRol);
+    const rol = _rolesRepository.create({ nombre });
+    return await _rolesRepository.save(rol);
 };
 
 const modificarRol = async (rolId: number, nuevoNombre: string): Promise<RolEntity | null> => {
