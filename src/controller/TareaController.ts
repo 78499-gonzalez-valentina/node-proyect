@@ -37,16 +37,7 @@ const obtenerTareasPorEstado = async (request: Request, response: Response) => {
     }
 }
 
-const asignarEstadoATarea = async (request: Request, response: Response) => {
-    try {
-        const { id } = request.params;
-        const { estadoId } = request.body;
-        const tarea = await TareaService.asignarEstadoATarea(Number(id), estadoId);
-        response.status(200).json(tarea);
-    } catch (e: any) {
-        response.status(404).send(e.message);
-    }
-}
+
 
 const crearTarea = async (request: Request, response: Response) => {
     try {
@@ -58,27 +49,16 @@ const crearTarea = async (request: Request, response: Response) => {
     }
 }
 
-const editarTarea = async (request: Request, response: Response) => {
-    try {
-        const { id } = request.params;
-        const payload = request.body;
-        const tarea = await TareaService.editarTarea(Number(id), payload);
-        response.status(200).json(tarea);
-    } catch (e: any) {
-        response.status(400).send(e.message);
-    }
-}
-
-const actualizarFechaLimite = async (request: Request, response: Response) => {
-    try {
-        const { id } = request.params;
-        const { fechaLimite } = request.body;
-        const tarea = await TareaService.actualizarFechaLimite(Number(id), fechaLimite);
-        response.status(200).json(tarea);
-    } catch (e: any) {
-        response.status(400).send(e.message);
-    }
-}
+const actualizarTarea = async (request: Request, response: Response) => {
+  try {
+    const { id } = request.params;
+    const payload = request.body;
+    const tarea = await TareaService.actualizarTarea(Number(id), payload);
+    response.status(200).json(tarea);
+  } catch (e: any) {
+    response.status(400).send(e.message);
+  }
+};
 
 const eliminarTarea = async (request: Request, response: Response) => {
   try {
@@ -95,9 +75,7 @@ export const TareaController = {
     obtenerTareasPorDesarrollador,
     obtenerTareasPorProyecto,
     obtenerTareasPorEstado,
-    asignarEstadoATarea,
+    actualizarTarea, 
     crearTarea,
-    editarTarea,
-    actualizarFechaLimite,
     eliminarTarea
 };

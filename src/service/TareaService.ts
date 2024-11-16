@@ -17,20 +17,12 @@ const obtenerTareasPorEstado = (estadoId: number) => {
   return TareaRepository.obtenerTareasPorEstado(estadoId);
 };
 
-const asignarEstadoATarea = (tareaId: number, estadoId: number) => {
-  return TareaRepository.asignarEstadoATarea(tareaId, estadoId);
-};
-
 const crearTarea = (tarea: CrearTareaDto) => {
   return TareaRepository.crearTarea(tarea);
 };
 
-const editarTarea = (tareaId: number, tarea: Partial<CrearTareaDto>) => {
-  return TareaRepository.editarTarea(tareaId, tarea);
-};
-
-const actualizarFechaLimite = (tareaId: number, fechaLimite: Date) => {
-  return TareaRepository.actualizarFechaLimite(tareaId, fechaLimite);
+const actualizarTarea = (tareaId: number, tarea: Partial<CrearTareaDto>) => {
+  return TareaRepository.actualizarTarea(tareaId, tarea);
 };
 
 const eliminarTarea = (tareaId: number) => {
@@ -44,9 +36,8 @@ export const TareaService = {
   obtenerTareasPorDesarrollador,
   obtenerTareasPorProyecto,
   obtenerTareasPorEstado,
-  asignarEstadoATarea,
+  actualizarTarea,
   crearTarea,
-  editarTarea,
-  actualizarFechaLimite,
+ 
   eliminarTarea
 };

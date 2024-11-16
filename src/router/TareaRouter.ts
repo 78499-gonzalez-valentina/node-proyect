@@ -23,10 +23,6 @@ TareaRouter.get('/estado/:id', (req: Request, res: Response) => {
     TareaController.obtenerTareasPorEstado(req, res);
 });
 
-// Asignar estado a tarea
-TareaRouter.patch('/:id/estado', (req: Request, res: Response) => {
-    TareaController.asignarEstadoATarea(req, res);
-});
 
 // Crear tarea
 TareaRouter.post('', (req: Request, res: Response) => {
@@ -35,13 +31,9 @@ TareaRouter.post('', (req: Request, res: Response) => {
 
 // Editar tarea
 TareaRouter.put('/:id', (req: Request, res: Response) => {
-    TareaController.editarTarea(req, res);
+    TareaController.actualizarTarea(req, res);
 });
 
-// Actualizar fecha límite de la tarea
-TareaRouter.patch('/:id/fecha-limite', (req: Request, res: Response) => {
-    TareaController.actualizarFechaLimite(req, res);
-});
 
 TareaRouter.delete('/:id', (req: Request, res: Response) => {
   TareaController.eliminarTarea(req, res);

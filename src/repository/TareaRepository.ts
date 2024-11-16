@@ -39,29 +39,6 @@ const obtenerTareasPorEstado = async (estadoId: number): Promise<TareaEntity[]> 
   });
 };
 
-const asignarEstadoATarea = async (tareaId: number, estadoId: number): Promise<TareaEntity> => {
-  // Obtener la tarea por su ID
-  const tarea = await _tareaRepository.findOne({
-    where: { id: tareaId },
-    relations: ['estado'], 
-  });
-
-  if (!tarea) {
-    throw new Error('Tarea no encontrada');
-  }
-
-  const estado = await _estadoRepository.findOne({
-    where: { id: estadoId },
-  });
-
-  if (!estado) {
-    throw new Error('Estado no encontrado');
-  }
-
-  tarea.estado = estado;
-  tarea.fecha_actualizacion = new Date();
-  return await _tareaRepository.save(tarea);
-};
 
 const crearTarea = async (payload: CrearTareaDto): Promise<TareaEntity> => {
   // Desestructuramos el payload para extraer los valores del DTO.
@@ -91,36 +68,47 @@ const crearTarea = async (payload: CrearTareaDto): Promise<TareaEntity> => {
   return await _tareaRepository.save(tarea);
 };
 
-const editarTarea = async (id: number, payload: any): Promise<TareaEntity> => {
+const actualizarTarea = async (id: number, payload: Partial<CrearTareaDto>): Promise<TareaEntity> => {
+  // Obtener la tarea por su ID
   const tarea = await _tareaRepository.findOne({
-    where: { id },
-    relations: ['proyecto', 'estado', 'desarrollador'],
+    where: { id }, 
+    relations: ['proyecto', 'estado', 'desarrollador'], 
   });
 
   if (!tarea) {
     throw new Error('Tarea no encontrada');
   }
 
-  // Actualizar los campos de la tarea
-  tarea.titulo = payload.nombre || tarea.titulo;
-  tarea.descripcion = payload.descripcion || tarea.descripcion;
-  tarea.fecha_limite = payload.fechaLimite || tarea.fecha_limite;
-  // Cambiar estado, desarrollador y proyecto si es necesario
-  if (payload.estadoId) {
-    const estado = await _estadoRepository.findOneBy({ id: payload.estadoId });
+  // Solo actualizar los campos que vienen en el payload
+  if (payload.titulo) tarea.titulo = payload.titulo;
+  if (payload.descripcion) tarea.descripcion = payload.descripcion;
+  if (payload.fecha_limite) tarea.fecha_limite = payload.fecha_limite;
+
+  // Cambiar estado si es necesario
+  if (payload.id_estado) {
+    const estado = await _estadoRepository.findOneBy({ id: payload.id_estado });
     if (estado) tarea.estado = estado;
   }
-  if (payload.desarrolladorId) {
-    const desarrollador = await _desarrolladorRepository.findOneBy({ id: payload.desarrolladorId });
+
+  // Cambiar desarrollador si es necesario
+  if (payload.id_desarrollador) {
+    const desarrollador = await _desarrolladorRepository.findOneBy({ id: payload.id_desarrollador });
     if (desarrollador) tarea.desarrollador = desarrollador;
   }
-  if (payload.proyectoId) {
-    const proyecto = await _proyectoRepository.findOneBy({ id: payload.proyectoId });
+
+  // Cambiar proyecto si es necesario
+  if (payload.id_proyecto) {
+    const proyecto = await _proyectoRepository.findOneBy({ id: payload.id_proyecto });
     if (proyecto) tarea.proyecto = proyecto;
   }
+
+  // Actualizar la fecha de actualización
   tarea.fecha_actualizacion = new Date();
+
+  // Guardar la tarea actualizada
   return await _tareaRepository.save(tarea);
 };
+
 
 const eliminarTarea = async (id: number): Promise<void> => {
   const tarea = await _tareaRepository.findOneBy({ id });
@@ -131,30 +119,14 @@ const eliminarTarea = async (id: number): Promise<void> => {
   await _tareaRepository.remove(tarea);
 };
 
-const actualizarFechaLimite = async (tareaId: number, nuevaFechaLimite: Date): Promise<TareaEntity> => {
-  const tarea = await _tareaRepository.findOne({
-    where: { id: tareaId },
-  });
-
-  if (!tarea) {
-    throw new Error('Tarea no encontrada');
-  }
-
-  // Actualizar la fecha límite
-  tarea.fecha_limite = nuevaFechaLimite;
-  tarea.fecha_actualizacion = new Date();
-
-  return await _tareaRepository.save(tarea);
-};
 
 export const TareaRepository = {
   obtenerTodasLasTareas,
   obtenerTareasPorDesarrollador,
   obtenerTareasPorProyecto,
   obtenerTareasPorEstado,
-  asignarEstadoATarea,
+  actualizarTarea,
   crearTarea,
-  editarTarea,
-  actualizarFechaLimite, 
+
   eliminarTarea
 };

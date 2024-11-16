@@ -12,13 +12,40 @@ const obtenerDesarrolladores = async (): Promise<DesarrolladorEntity[]> => {
     }
     }
     
-// me falta actualizar desarrollador!!!!!!!!
+const actualizarDesarrollador = async (id: number, payload: CrearDesarrolladorDto): Promise<DesarrolladorEntity> => {
+  // Buscar al desarrollador por ID
+  const desarrollador = await _desarrolladorRepository.findOne({ where: { id }, relations: ['rol'] });
+
+  if (!desarrollador) {
+    throw new Error('Desarrollador no encontrado');
+  }
+
+  // Si se pasa un id_rol, buscamos el objeto completo del rol
+  if (payload.id_rol) {
+    const rol = await dataSource.getRepository(RolEntity).findOne({ where: { id: payload.id_rol } });
+
+    if (!rol) {
+      throw new Error('Rol no encontrado');
+    }
+
+    desarrollador.rol = rol; // Asignar el objeto completo de RolEntity
+  }
+
+  // Actualizamos los otros campos
+  desarrollador.nombre = payload.nombre || desarrollador.nombre;
+  desarrollador.correo = payload.correo || desarrollador.correo;
+  desarrollador.fechaContratacion = payload.fecha_contratacion || desarrollador.fechaContratacion;
+  desarrollador.fechaActualizacion = new Date(); // Siempre actualizamos la fecha de modificación
+
+  // Guardamos los cambios
+  return await _desarrolladorRepository.save(desarrollador);
+};
 
 // Obtener un desarrollador por nombre
-const obtenerDesarrollador = async (nombre: string): Promise<DesarrolladorEntity | null> => {
+const obtenerDesarrollador = async (id: number): Promise<DesarrolladorEntity | null> => {
   return await _desarrolladorRepository.findOne({
-    where: { nombre },
-    relations: ['rol'], // Incluir la relación 'rol'
+    where: { id },  // Buscando por id
+    relations: ['rol'],  // Incluir la relación 'rol'
   });
 };
 
@@ -38,12 +65,10 @@ const agregarDesarrollador = async (payload: CrearDesarrolladorDto): Promise<Des
 
 
 const obtenerDesarrolladoresPorRol = async (rolId: number): Promise<DesarrolladorEntity[]> => {
-  const desarrolladores = await _desarrolladorRepository.find({
+  return await _desarrolladorRepository.find({
     where: { rol: { id: rolId } }, // Filtramos por rolId
-    relations: ['rol'],  // Incluimos la relación de 'rol' si se requiere
+    relations: ['rol'],  // Incluimos la relación de 'rol'
   });
-
-  return desarrolladores;
 };
 
 const eliminarDesarrollador = async (id: number): Promise<void> => {
@@ -63,6 +88,7 @@ export const DesarrolladorRepository = {
     obtenerDesarrollador,
     agregarDesarrollador,
     eliminarDesarrollador,
-    obtenerDesarrolladoresPorRol
+    obtenerDesarrolladoresPorRol,
+    actualizarDesarrollador
 
 }
