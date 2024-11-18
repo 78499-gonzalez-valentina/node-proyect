@@ -24,10 +24,10 @@ export class DesarrolladorEntity implements Desarrollador{
   @Column({name: "fecha_contratacion"})
   fechaContratacion: Date;
 
-  @Column({name: "fecha_creacion"})
+  @Column({name: "fecha_creacion", type: 'timestamp' })
   fechaCreacion: Date;
 
-  @Column({name: "fecha_actualizacion"})
+  @Column({name: "fecha_actualizacion", type: 'timestamp' })
   fechaActualizacion: Date;
 
   @OneToMany(() => TareaEntity, (tarea) => tarea.desarrollador)

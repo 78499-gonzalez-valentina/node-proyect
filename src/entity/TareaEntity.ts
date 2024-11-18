@@ -28,10 +28,10 @@ export class TareaEntity implements Tarea{
   @JoinColumn({ name: "id_estado" })
   estado: EstadoEntity;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   fecha_limite: Date;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   fecha_creacion: Date;
 
   @Column()

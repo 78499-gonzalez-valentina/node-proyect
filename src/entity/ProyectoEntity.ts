@@ -31,10 +31,10 @@ responsable: DesarrolladorEntity;
 @OneToMany(() => DesarrolladorXProyectoEntity, (desarrolladorXProyecto) => desarrolladorXProyecto.proyecto)
 desarrolladores: DesarrolladorXProyectoEntity[];
 
-   @Column()
+   @Column({ type: 'timestamp' } )
   fecha_creacion: Date;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   fecha_actualizacion: Date;
 
 
