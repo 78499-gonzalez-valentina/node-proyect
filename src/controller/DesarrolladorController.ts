@@ -3,10 +3,14 @@ import {DesarrolladorService} from "../service/DesarrolladorService";
 import { CrearDesarrolladorDto } from "../dto/CrearDesarrolladorDto";
 
 const obtenerDesarrolladores = async (request: Request, response: Response) => {
-    const desarolladores = await DesarrolladorService.obtenerDesarrolladores()
-    response.send(desarolladores)
-}
-
+  try {
+    // Obtener desarrolladores con la relación al rol
+    const desarrolladores = await DesarrolladorService.obtenerDesarrolladores();
+    response.send(desarrolladores);
+  } catch (error) {
+    response.status(500).send({ error: 'Error al obtener los desarrolladores' });
+  }
+};
 const obtenerDesarrollador = async (request: Request, response: Response) => {
    try {
     // Cambiamos 'nombre' por 'id' para obtener el parámetro de la URL

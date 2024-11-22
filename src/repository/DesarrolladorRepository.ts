@@ -6,12 +6,12 @@ import { RolEntity } from '../entity/RolEntity';
 const _desarrolladorRepository = dataSource.getRepository(DesarrolladorEntity)
 
 const obtenerDesarrolladores = async (): Promise<DesarrolladorEntity[]> => {
-    return await _desarrolladorRepository.find()
-    relations:{
-        rol:true
-    }
-    }
-    
+  return await _desarrolladorRepository.find({
+    relations: {
+      rol: true, // Incluir la relación con la entidad `RolEntity`
+    },
+  });
+};
 const actualizarDesarrollador = async (id: number, payload: CrearDesarrolladorDto): Promise<DesarrolladorEntity> => {
   // Buscar al desarrollador por ID
   const desarrollador = await _desarrolladorRepository.findOne({ where: { id }, relations: ['rol'] });
