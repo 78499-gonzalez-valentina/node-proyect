@@ -98,16 +98,18 @@ const obtenerProyectoPorId = async (id: number): Promise<ProyectoEntity | null> 
 
 // Obtener todos los desarrolladores de un proyecto
 const obtenerDesarrolladoresDeProyecto = async (idProyecto: number): Promise<DesarrolladorEntity[]> => {
+  // Consultar el proyecto y cargar los desarrolladores relacionados
   const proyecto = await _proyectoRepository.findOne({
     where: { id: idProyecto },
-    relations: ['desarrolladores.desarrollador'],
+    relations: ['desarrolladores'], // Cargar la relación definida como 'desarrolladores'
   });
 
   if (!proyecto) {
     return []; // Si el proyecto no existe, retornar un array vacío
   }
 
-  return proyecto.desarrolladores.map((d) => d.desarrollador);
+  // Retornar directamente los desarrolladores del proyecto
+  return proyecto.desarrolladores;
 };
 
 // Exportar las funciones del repositorio

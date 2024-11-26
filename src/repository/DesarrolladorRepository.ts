@@ -50,19 +50,32 @@ const obtenerDesarrollador = async (id: number): Promise<DesarrolladorEntity | n
 };
 
 const agregarDesarrollador = async (payload: CrearDesarrolladorDto): Promise<DesarrolladorEntity> => {
+  // Crear el desarrollador
   const nuevoDesarrollador = _desarrolladorRepository.create({
     nombre: payload.nombre,
     correo: payload.correo,
-    rol: { id: payload.id_rol }, // Asignamos el rol usando el ID
+    rol: { id: payload.id_rol },
     fechaContratacion: payload.fecha_contratacion,
     fechaCreacion: new Date(),
     fechaActualizacion: new Date(),
   });
 
-  // Guardar en la base de datos
-  return await _desarrolladorRepository.save(nuevoDesarrollador);
-};
+  // Guardar el desarrollador en la base de datos
+  const desarrolladorGuardado = await _desarrolladorRepository.save(nuevoDesarrollador);
 
+  // Consultar nuevamente para incluir la relación del rol
+  const desarrolladorCompleto = await _desarrolladorRepository.findOne({
+    where: { id: desarrolladorGuardado.id },
+    relations: ['rol'],
+  });
+
+  // Lanzar un error si no encuentra el registro
+  if (!desarrolladorCompleto) {
+    throw new Error(`No se encontró el desarrollador con ID ${desarrolladorGuardado.id}`);
+  }
+
+  return desarrolladorCompleto;
+};
 
 const obtenerDesarrolladoresPorRol = async (rolId: number): Promise<DesarrolladorEntity[]> => {
   return await _desarrolladorRepository.find({
