@@ -92,7 +92,7 @@ const asignarResponsable = async (
 const obtenerProyectoPorId = async (id: number): Promise<ProyectoEntity | null> => {
   return await _proyectoRepository.findOne({
     where: { id },
-    relations: ['responsable', 'desarrolladores.desarrollador', 'tareas'],
+    relations: ['responsable', 'desarrolladores', 'tareas'],
   });
 };
 
