@@ -54,7 +54,14 @@ const editarProyecto = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const proyecto = await ProyectoService.editarProyecto(Number(id), proyectoData);
+        // Convertir fechas de string a Date, si están presentes
+        const datosProcesados = {
+            ...proyectoData,
+            fecha_inicio: proyectoData.fecha_inicio ? new Date(proyectoData.fecha_inicio) : undefined,
+            fecha_fin: proyectoData.fecha_fin ? new Date(proyectoData.fecha_fin) : undefined,
+        };
+
+        const proyecto = await ProyectoService.editarProyecto(Number(id), datosProcesados);
 
         if (!proyecto) {
             res.status(404).json({ message: "Proyecto no encontrado" });
@@ -69,6 +76,8 @@ const editarProyecto = async (req: Request, res: Response): Promise<void> => {
         });
     }
 };
+
+
 
 const eliminarProyecto = async (req: Request, res: Response) => {
     try {

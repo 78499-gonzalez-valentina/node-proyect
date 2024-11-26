@@ -38,22 +38,25 @@ export { crearProyecto };
 
 // Función para actualizar un proyecto
 const editarProyecto = async (
-  id: number,
-  proyectoData: Partial<CrearProyectoDto>
+    id: number,
+    proyectoData: Partial<CrearProyectoDto>
 ): Promise<ProyectoEntity | null> => {
-  const proyectoExistente = await _proyectoRepository.findOneBy({ id });
+    const proyectoExistente = await _proyectoRepository.findOneBy({ id });
 
-  if (!proyectoExistente) {
-    return null; // Proyecto no encontrado
-  }
+    if (!proyectoExistente) {
+        return null; // Proyecto no encontrado
+    }
 
-  const proyectoActualizado = _proyectoRepository.merge(proyectoExistente, {
-    ...proyectoData,
-    fecha_actualizacion: new Date(),
-  });
+    const proyectoActualizado = _proyectoRepository.merge(proyectoExistente, {
+        ...proyectoData,
+        fecha_inicio: proyectoData.fecha_inicio ? new Date(proyectoData.fecha_inicio).toISOString() : undefined,
+        fecha_fin: proyectoData.fecha_fin ? new Date(proyectoData.fecha_fin).toISOString() : undefined,
+        fecha_actualizacion: new Date().toISOString(),
+    });
 
-  return await _proyectoRepository.save(proyectoActualizado);
+    return await _proyectoRepository.save(proyectoActualizado);
 };
+
 
 // Función para eliminar un proyecto
 const eliminarProyecto = async (id: number): Promise<boolean> => {
