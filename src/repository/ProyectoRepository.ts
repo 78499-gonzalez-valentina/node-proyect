@@ -10,7 +10,7 @@ const _desarrolladorRepository = dataSource.getRepository(DesarrolladorEntity)
 // Función para obtener todos los proyectos con sus detalles y responsables
 const obtenerProyectos = async (): Promise<ProyectoEntity[]> => {
   return await _proyectoRepository.find({
-    relations: ['responsable', 'desarrolladores.desarrollador', 'tareas'],
+    relations: ['responsable', 'desarrolladores', 'tareas'],
   });
 };
 

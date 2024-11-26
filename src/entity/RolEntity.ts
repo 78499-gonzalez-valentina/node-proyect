@@ -12,5 +12,5 @@ export class RolEntity implements Rol{
   nombre: string;
 
   @OneToMany(() => DesarrolladorEntity, (desarrollador) => desarrollador.rol)
-  desarrollador: DesarrolladorEntity
+  desarrollador: DesarrolladorEntity[];
 }
