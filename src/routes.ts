@@ -4,6 +4,7 @@ import TareaRouter from "./router/TareaRouter";
 import RolesRouter from "./router/RolesRouter";
 import path from "path";
 import EstadoRouter from "./router/EstadoRouter";
+import MetricasRouter from "./router/MetricasRouter";
 
 export const ROUTES = [
     {
@@ -25,6 +26,10 @@ export const ROUTES = [
     {
         path: '/estados',
         router: EstadoRouter
+    },
+    {
+        path:'/metricas',
+        router: MetricasRouter
     }
     
 ]

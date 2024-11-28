@@ -69,45 +69,58 @@ const crearTarea = async (payload: CrearTareaDto): Promise<TareaEntity> => {
 };
 
 const actualizarTarea = async (id: number, payload: Partial<CrearTareaDto>): Promise<TareaEntity> => {
-  // Obtener la tarea por su ID
   const tarea = await _tareaRepository.findOne({
-    where: { id }, 
-    relations: ['proyecto', 'estado', 'desarrollador'], 
+    where: { id },
+    relations: ['proyecto', 'estado', 'desarrollador'],
   });
 
   if (!tarea) {
     throw new Error('Tarea no encontrada');
   }
 
-  // Solo actualizar los campos que vienen en el payload
+  // Actualizar campos básicos
   if (payload.titulo) tarea.titulo = payload.titulo;
   if (payload.descripcion) tarea.descripcion = payload.descripcion;
-  if (payload.fecha_limite) tarea.fecha_limite = payload.fecha_limite;
+  if (payload.fecha_limite) tarea.fecha_limite = new Date(payload.fecha_limite);
 
-  // Cambiar estado si es necesario
+  // Actualizar relaciones si están en el payload
   if (payload.id_estado) {
     const estado = await _estadoRepository.findOneBy({ id: payload.id_estado });
-    if (estado) tarea.estado = estado;
+    if (!estado) throw new Error(`Estado con ID ${payload.id_estado} no encontrado`);
+    tarea.estado = estado;
   }
 
-  // Cambiar desarrollador si es necesario
   if (payload.id_desarrollador) {
     const desarrollador = await _desarrolladorRepository.findOneBy({ id: payload.id_desarrollador });
-    if (desarrollador) tarea.desarrollador = desarrollador;
+    if (!desarrollador) throw new Error(`Desarrollador con ID ${payload.id_desarrollador} no encontrado`);
+    tarea.desarrollador = desarrollador;
   }
 
-  // Cambiar proyecto si es necesario
   if (payload.id_proyecto) {
     const proyecto = await _proyectoRepository.findOneBy({ id: payload.id_proyecto });
-    if (proyecto) tarea.proyecto = proyecto;
+    if (!proyecto) throw new Error(`Proyecto con ID ${payload.id_proyecto} no encontrado`);
+    tarea.proyecto = proyecto;
   }
 
-  // Actualizar la fecha de actualización
+  // Actualizar la fecha de modificación
   tarea.fecha_actualizacion = new Date();
 
-  // Guardar la tarea actualizada
-  return await _tareaRepository.save(tarea);
+  // Guardar los cambios
+  await _tareaRepository.save(tarea);
+
+  // Recargar las relaciones y devolver la tarea completa
+  const tareaActualizada = await _tareaRepository.findOne({
+    where: { id },
+    relations: ['proyecto', 'estado', 'desarrollador'],
+  });
+
+  if (!tareaActualizada) {
+    throw new Error('Error al cargar la tarea actualizada');
+  }
+
+  return tareaActualizada;
 };
+
 
 
 const eliminarTarea = async (id: number): Promise<void> => {
